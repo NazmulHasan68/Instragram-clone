@@ -2,7 +2,7 @@ import { User } from "../models/user.model.js"
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { getDataUri } from "../util/datauri.js"
-import cloudinary from "./util/cloudinary.js";
+import cloudinary from "../util/cloudinary.js";
 
 export const register = async(req, res)=>{
     try {
@@ -85,7 +85,8 @@ export const editProfile = async(req, res)=>{
         let cloudResponse;
         if(profilePicture) {
             const fileUri = getDataUri(profilePicture)
-            cloudResponse = await cloudinary.uploader.upload(fileUri);
+            cloudResponse = await cloudinary.uploader.upload(fileUri,{folder: "Instagram"}
+            );
         }
 
         const user = await User.findById(userId);
