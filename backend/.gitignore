@@ -1,0 +1,45 @@
+# Node.js specific
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment Variables
+.env
+
+# Logs
+logs/
+*.log
+logs/*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE/Editor specific
+.vscode/
+.idea/
+*.swp
+
+# Build/Generated files
+dist/
+build/
+
+# Temporary files
+*.tmp
+*.temp
+*.cache
+
+# Sockets and pipes
+*.sock
+*.pid
+
+# Coverage reports
+coverage/
+
+# Dependency directories
+bower_components/
+
+# Other
+*.bak
+*.orig
