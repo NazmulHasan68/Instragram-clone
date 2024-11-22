@@ -1,14 +1,26 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
+import Home from "@/pages/Home";
+import MainLayout from "./pages/MainLayout";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/login" />} />
+        {/* Routes wrapped with MainLayout */}
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<Home />} /> 
+          <Route path="/profile" element={<Profile/>} /> 
+        </Route>
+
+        {/* Auth Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+
+        {/* Redirect and 404 */}
+        <Route path="/" element={<Navigate to="/login" />} />
         <Route path="*" element={<h1>404: Page Not Found</h1>} />
       </Routes>
     </BrowserRouter>
@@ -16,4 +28,3 @@ function App() {
 }
 
 export default App;
-
