@@ -4,14 +4,10 @@ import path from "path";
 const parser = new DataUriParser();
 
 export const getDataUri = (file) => {
-    try {
-        if (!file?.originalname || !file?.buffer) {
-            throw new Error("Invalid file object");
-        }
-        const extName = path.extname(file.originalname).toString();
-        return parser.format(extName, file.buffer).content;
-    } catch (error) {
-        console.error("Error generating Data URI:", error.message);
-        return null; 
+    if (!file || !file.originalname || !file.buffer) {
+        throw new Error("Invalid file object. Ensure 'originalname' and 'buffer' are provided.");
     }
+    const extName = path.extname(file.originalname); // Removed .toString()
+    return parser.format(extName, file.buffer).content;
 };
+

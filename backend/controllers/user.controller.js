@@ -9,7 +9,7 @@ export const register = async(req, res)=>{
         const {username, email, password} = req.body
         if(!username, !email, !password) return res.status(401).json({success:false, message:"Something is messing, please check"})
         
-        const user = await User.find({email})
+        const user = await User.findOne({email})
         if(user) return res.status(401).json({success: false, message:"Try to different email"})
         
         const hashPassword = await bcrypt.hash(password,10)
@@ -28,8 +28,8 @@ export const login = async(req, res)=>{
         const {email, password} = req.body
         if(!email, !password) return res.status(401).json({success:false, message:"Something is messing, please check"})
         
-        let user = await User.findOne({email})
-        if(user) return res.status(401).json({success: false, message:"user not found!"})
+        let user = await User.findOne({email}) 
+        if(!user) return res.status(401).json({success: false, message:"user not found!"})
         
         const isPasswordMatch = await bcrypt.compare(password, user.password)
         if(!isPasswordMatch) return res.status(401).json({success:false, message:"Incorrect email or password!"})
@@ -45,7 +45,8 @@ export const login = async(req, res)=>{
             posts : user.posts,
             bookmarks : user.bookmarks
         }
-        const token = await jwt.sign({userId:user._id}, process.env.JWT_KEY, {expiresIn:'1d'})
+        
+        const token = await jwt.sign({userId: user.id}, process.env.JWT_KEY, {expiresIn:'1d'})
         return res.cookie('token', token, {httpOnly:true, sameSite:'strict', maxAge:1*24*60*60*1000}).json({success:true, user, message:`Welcome Back ${user.username}`})
 
     } catch (error) {
@@ -76,33 +77,37 @@ export const getProfile = async(req, res) =>{
 }
 
 
-export const editProfile = async(req, res)=>{
+
+export const editProfile = async (req, res) => {
     try {
-        const userId = req.id
-        const {bio, gender} = req.body
-        const profilePicture = req.find
+        const userId = req.id;   
+        const { bio, gender } = req.body;
+        const profilePicture = req.file;
 
         let cloudResponse;
-        if(profilePicture) {
-            const fileUri = getDataUri(profilePicture)
-            cloudResponse = await cloudinary.uploader.upload(fileUri,{folder: "Instagram"}
-            );
+        if (profilePicture) {
+            const fileUri = getDataUri(profilePicture);
+            if (!fileUri) {
+                return res.status(400).json({ success: false, message: "Invalid file upload." });
+            }
+            cloudResponse = await cloudinary.uploader.upload(fileUri, { folder: "Instagram" });
         }
 
-        const user = await User.findById(userId);
-        if(!user) return res.status(404).json({success:false, message:"user not found!"})
+        const user = await User.findById(userId).select('-password')
+        if (!user) return res.status(404).json({ success: false, message: "User not found!" });
 
-        if(bio) user.bio = bio
-        if(gender) user.gender = gender
-        if(profilePicture) user.profilePicture = cloudResponse.secure_url;
+        if (bio) user.bio = bio;
+        if (gender) user.gender = gender;
+        if (profilePicture) user.profilePicture = cloudResponse.secure_url;
 
-        await user.save()
-        return res.status(200).json({success:true, user,  message:"profile updated!"})
-
+        await user.save();
+        return res.status(200).json({ success: true, user, message: "Profile updated!" });
     } catch (error) {
-        res.status(500).json({message:"edit profile error", error})
+        console.error("Edit profile error:", error);
+        res.status(500).json({ success: false, message: "Server error.", error: error.message });
     }
-}
+};
+
 
 
 
