@@ -3,33 +3,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { toast } from "sonner"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
-
-
-const sidebarItems = [
-    { icon: <Home/>, text: "Home" },
-    { icon: <Search/>, text: "Search" },
-    { icon: <TrendingUp/>, text: "Explore" },
-    { icon: <MessageCircle/>, text: "Messages" },
-    { icon: <Heart/>, text: "Notification" },
-    { icon: <Map/>, text: "Place" },
-    { icon: <PlaneIcon/>, text: "Travel" },
-    { icon: <PlusSquare/>, text: "Create" },
-    { 
-        icon: (
-            <Avatar className='w-6 h-6'>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-        )
-        , text: "Profile" 
-    },
-    { icon: <LogOut/> , text:"Logout"}
-
-]
+import { useSelector } from "react-redux"
 
 
 export default function LeftSidebar() {
   const navigate = useNavigate()
+  const {user} = useSelector(state =>state.auth)
 
   const logoutHnadler = async()=>{
     try {
@@ -43,6 +22,27 @@ export default function LeftSidebar() {
     }
   }
 
+  const sidebarItems = [
+    { icon: <Home/>, text: "Home" },
+    { icon: <Search/>, text: "Search" },
+    { icon: <TrendingUp/>, text: "Explore" },
+    { icon: <MessageCircle/>, text: "Messages" },
+    { icon: <Heart/>, text: "Notification" },
+    { icon: <Map/>, text: "Place" },
+    { icon: <PlaneIcon/>, text: "Travel" },
+    { icon: <PlusSquare/>, text: "Create" },
+    { 
+        icon: (
+            <Avatar className='w-6 h-6'>
+                <AvatarImage src={user?.profilePicture} />
+                <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+        )
+        , text: "Profile" 
+    },
+    { icon: <LogOut/> , text:"Logout"}
+
+]
 
   const sidebarHandler =(textType)=>{
     if(textType === 'Logout') logoutHnadler()
