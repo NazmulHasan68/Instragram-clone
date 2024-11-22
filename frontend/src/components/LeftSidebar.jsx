@@ -3,10 +3,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { toast } from "sonner"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
+import { setAuthUser } from "@/redux/authSlice"
 
 
 export default function LeftSidebar() {
+  const dispatch = useDispatch()
   const navigate = useNavigate()
   const {user} = useSelector(state =>state.auth)
 
@@ -15,6 +17,7 @@ export default function LeftSidebar() {
       const res = await axios.get(`http://localhost:8000/api/v1/user/logout`,{withCredentials:true})
       if(res.data.success){
         navigate('/login')
+        dispatch(setAuthUser(null))
         toast.success(res.data.message)
       }
     } catch (error) {
