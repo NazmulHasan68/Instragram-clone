@@ -86,7 +86,7 @@ export default function SignUp() {
               className='focus-visible:ring-transparent my-2 text-slate-600 text-sm'
             />
           </div>
-          <Button type="submit">{loading?<><Loader2/>wait</>:'Sign up'}</Button>
+          <Button type="submit">{loading?<><Loader2/>Please wait</>:'Sign up'}</Button>
           <p>Already have account <Link to={'/login'} className="text-teal-600"> Login now</Link></p>
         </div>
       </form>
