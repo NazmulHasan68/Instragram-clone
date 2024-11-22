@@ -1,8 +1,9 @@
+import Posts from "./Posts";
 
 export default function Feed() {
   return (
-    <div>
-      <div></div>
+    <div className="flex-1 my-4 flex flex-col ">
+      <Posts/>
     </div>
   )
 }

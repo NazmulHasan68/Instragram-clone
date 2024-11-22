@@ -7,7 +7,7 @@ export default function MainLayout() {
       <div>
        <LeftSidebar/>
       </div>
-      <div>
+      <div className="w-full">
         <Outlet/>
       </div>
     </div>
