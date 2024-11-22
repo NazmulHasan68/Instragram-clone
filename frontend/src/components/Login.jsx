@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -7,9 +6,8 @@ import axios from "axios";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 
-export default function SignUp() {
+export default function Login() {
   const [input , setInput] = useState({
-    username: "",
     email : "",
     password: ""
   })
@@ -24,7 +22,7 @@ export default function SignUp() {
     console.log(input);
     try {
       setloading(true)
-      const res = await axios.post(`http://localhost:8000/api/v1/user/register`,input ,{
+      const res = await axios.post(`http://localhost:8000/api/v1/user/login`,input ,{
         headers:{
           "Content-Type":"application/json"
         },
@@ -33,7 +31,6 @@ export default function SignUp() {
       if(res.data.success){
         toast.success(res.data.message)
         setInput({
-          username: "",
           email : "",
           password: ""
         })
@@ -50,19 +47,9 @@ export default function SignUp() {
       <form onSubmit={singupHandler} className="shadow-lg flex flex-col sm:flex-row gap-4 max-w-7xl">
         <div className="flex justify-center items-center flex-col flex-1 bg-slate-100 px-6 sm:py-12 py-24">
           <h1 className="text-center font-bold text-xl">LOGO</h1>
-          <p className="text-center text-slate-500 py-2">Sign up to see photos and videos from your friends</p>
+          <p className="text-center text-slate-500 py-2">Sign in to see photos and videos from your friends</p>
         </div>
         <div className="flex flex-col gap-5 py-4 px-4 flex-1">
-          <div>
-            <Label className='font-medium'>Username</Label>
-            <Input
-              type="text"
-              name="username"
-              value={input.username}
-              onChange={changeEventHandeler}
-              className='focus-visible:ring-transparent my-2 text-slate-600 text-sm'
-            />
-          </div>
           <div>
             <Label className='font-medium'>Email</Label>
             <Input
@@ -83,8 +70,8 @@ export default function SignUp() {
               className='focus-visible:ring-transparent my-2 text-slate-600 text-sm'
             />
           </div>
-          <Button type="submit">Sign up</Button>
-          <p>Already have account <Link to={'/login'} className="text-teal-600"> Login now</Link></p>
+          <Button type="submit">Sign in</Button>
+          <p>Do not have an Account <Link to={'/signup'} className="text-teal-600">Login Now</Link></p>
         </div>
       </form>
     </div>
