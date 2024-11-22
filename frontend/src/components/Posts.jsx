@@ -1,10 +1,12 @@
+import { useSelector } from "react-redux";
 import Post from "./Post";
 
 export default function Posts() {
+  const {posts} = useSelector(state=>state.post)
   return (
-    <div className="w-full">
+    <div className="w-full ">
         {
-            [1, 2, 3, 4].map((item, index)=><Post key={index}/>)
+            posts?.map((post, index)=><Post key={index} post={post}/>)
         } 
     </div>
   )

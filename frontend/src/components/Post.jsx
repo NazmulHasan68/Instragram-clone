@@ -6,10 +6,12 @@ import { CiHeart } from "react-icons/ci";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import CommentDialog from "./CommentDialog";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
-export default function Post() {
+export default function Post({post}) {
     const [text, setText] = useState("")
     const [open, setopen] = useState(false)
+    const {user} = useSelector(state =>state.auth)
 
     const changeEventHandler = (e)=>{
         const inputText = e.target.value;
@@ -19,15 +21,17 @@ export default function Post() {
             setText("")
         }
     }
+    console.log(post.image);
+    
   return (
-    <div className="w-full max-w-sm mx-auto overflow-y-auto">
+    <div className="w-full max-w-sm mx-auto overflow-y-auto shadow-md p-2 my-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Avatar>
-            <AvatarImage src="" alt="post_image" />
+            <AvatarImage src={user.profilePicture} alt="post_image" />
             <AvatarFallback>NZ</AvatarFallback>
           </Avatar>
-          <h1>Username</h1>
+          <h1>{user.username}</h1>
         </div>
         <Dialog>
           <DialogTrigger asChild>
@@ -51,7 +55,7 @@ export default function Post() {
       </div>
       <img
         className="w-full my-2 aspect-square object-cover"
-        src="https://images.unsplash.com/photo-1721332155433-3a4b5446bcd9?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwxfHx8ZW58MHx8fHx8"
+        src={post?.image}
         alt="post img"
       />
       <div>
@@ -67,10 +71,10 @@ export default function Post() {
         <span className="font-medium block mb-2 text-sm">1k likes </span>
         <p>
             <span className="font-medium mr-2">username </span>
-            Caption
+            {post.caption}
         </p>
         <span  onClick={()=>setopen(true)} className=" cursor-pointer text-sm text-gray-500">view all 10 comments</span>
-        <CommentDialog open={open} setopen={setopen}/>
+        <CommentDialog open={open} setopen={setopen} post={post}/>
         <div className="flex justify-between items-center">
             <input 
                 type="text"

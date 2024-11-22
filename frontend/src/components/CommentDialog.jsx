@@ -4,9 +4,11 @@ import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "./ui/button";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
-export default function CommentDialog({open, setopen}) {
+export default function CommentDialog({open, setopen, post}) {
     const [text ,settext] = useState("")
+    const {user } = useSelector(state=>state.auth)
 
     const chanageEventHandler = (e) =>{
         const inputText = e.target.value
@@ -28,7 +30,7 @@ export default function CommentDialog({open, setopen}) {
                 <div className="basis-1/2">
                     <img
                         className="w-full my-2 aspect-square object-cover"
-                        src="https://images.unsplash.com/photo-1721332155433-3a4b5446bcd9?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwxfHx8ZW58MHx8fHx8"
+                        src={post.image}
                         alt="post img"
                     />
                 </div>
@@ -37,13 +39,13 @@ export default function CommentDialog({open, setopen}) {
                         <div className="flex gap-3 items-center">
                             <Link to={'/profile'}>
                                 <Avatar>
-                                    <AvatarImage src=""/>
-                                    <AvatarFallback>CN</AvatarFallback>
+                                    <AvatarImage src={user.profilePicture}/>
+                                    {/* <AvatarFallback>CN</AvatarFallback> */}
                                 </Avatar>
                             </Link>
                             <div className="flex flex-col">
                                 <div className="flex gap-2 items-center">
-                                    <Link to={'/profile'} className="font-semibold text-sm">Username</Link>
+                                    <Link to={'/profile'} className="font-semibold text-sm">{user.username}</Link>
                                     <p className="text-sky-600 text-xs font-semibold cursor-pointer">Follower</p>
                                 </div>
                                 <span className="text-xs text-gray-600">bio here ...</span>
