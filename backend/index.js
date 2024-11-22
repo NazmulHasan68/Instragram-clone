@@ -15,7 +15,7 @@ app.use(cookieParser())
 app.use(urlencoded({extended:true}))
 const corsOption = {
     origin : 'http://localhost:5173',
-    credential: true
+    credentials: true
 }
 app.use(cors(corsOption))
 
