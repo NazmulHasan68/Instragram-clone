@@ -3,6 +3,9 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { getDataUri } from "../util/datauri.js"
 import cloudinary from "../util/cloudinary.js";
+import { Post } from "../models/post.mode.js";
+
+
 
 export const register = async(req, res)=>{
     try {
@@ -22,7 +25,6 @@ export const register = async(req, res)=>{
 }
 
 
-
 export const login = async(req, res)=>{
     try {
         const {email, password} = req.body
@@ -34,6 +36,16 @@ export const login = async(req, res)=>{
         const isPasswordMatch = await bcrypt.compare(password, user.password)
         if(!isPasswordMatch) return res.status(401).json({success:false, message:"Incorrect email or password!"})
         
+        //populate eatch post if in the posts array
+        const populatedPost = await Promise.all(
+            user.posts.map(async(postId)=>{
+                 const post = await Post.findById(postId)
+                 if(post.author.equals(user._id)){
+                    return post;
+                 }
+                 return null
+            })
+        )
         user ={
             id: user._id,
             username : user.username,
@@ -42,7 +54,7 @@ export const login = async(req, res)=>{
             bio: user.bio,
             followers : user.followers,
             following : user.following,
-            posts : user.posts,
+            posts : populatedPost,
             bookmarks : user.bookmarks
         }
         
@@ -107,8 +119,6 @@ export const editProfile = async (req, res) => {
         res.status(500).json({ success: false, message: "Server error.", error: error.message });
     }
 };
-
-
 
 
 
