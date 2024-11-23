@@ -6,12 +6,17 @@ import { CiHeart } from "react-icons/ci";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import CommentDialog from "./CommentDialog";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
+import axios from "axios";
+import { setPosts } from "@/redux/postSlice";
 
 export default function Post({post}) {
     const [text, setText] = useState("")
     const [open, setopen] = useState(false)
     const {user} = useSelector(state =>state.auth)
+    const {posts} = useSelector(state =>state.post)
+    const dispatch = useDispatch()
 
     const changeEventHandler = (e)=>{
         const inputText = e.target.value;
@@ -21,8 +26,22 @@ export default function Post({post}) {
             setText("")
         }
     }
-    console.log(post.image);
-    
+
+    const deletePostHandler = async() =>{
+      try {
+        const res = await axios.delete(`http://localhost:8000/api/v1/post/delete/${post._id}`,{withCredentials:true})
+        if(res.data.success){
+          const updatedPostData = posts.filter((postItem)=>postItem?._id !== post._id)
+          setopen(false)
+          dispatch(setPosts(updatedPostData))
+          toast.success(res.data.message)
+        }  
+      } catch (error) {
+        console.log(error);
+        toast.error(error.response.data.message)
+      }
+    }
+  
   return (
     <div className="w-full max-w-sm mx-auto overflow-y-auto shadow-md p-2 my-6">
       <div className="flex items-center justify-between">
@@ -31,7 +50,7 @@ export default function Post({post}) {
             <AvatarImage src={user.profilePicture} alt="post_image" />
             <AvatarFallback>NZ</AvatarFallback>
           </Avatar>
-          <h1>{user.username}</h1>
+          <h1>{post.author?.username}</h1>
         </div>
         <Dialog>
           <DialogTrigger asChild>
@@ -47,9 +66,10 @@ export default function Post({post}) {
             <Button variant="ghost" className="cursor-pointer w-fit ">
               Add to favorites
             </Button>
-            <Button variant="ghost" className="cursor-pointer w-fit">
-              Delete
-            </Button>
+            {
+              user && user?.id === post.author?._id &&  <Button variant="ghost" onClick={deletePostHandler} className="cursor-pointer w-fit">Delete</Button>
+            }
+            
           </DialogContent>
         </Dialog>
       </div>

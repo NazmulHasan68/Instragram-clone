@@ -42,8 +42,8 @@ export const addNewPost = async(req, res)=>{
 export const getAllposts = async(req, res) =>{
     try {
         const post = await Post.find().sort({createdAt:-1})
-        .populate({path:'author', select:'username, profilePicture'})
-        .populate({path:'comments', sort:{createdAt:-1}, populate:{path:"author", select:"username, profilePicture"}})
+        .populate({path:'author', select:'username profilePicture'})
+        .populate({path:'comments', sort:{createdAt:-1}, populate:{path:"author", select:"username profilePicture"}})
 
         return res.status(200).json({success:true, post, message:"getAll posts Done!"})
     } catch (error) {
@@ -148,7 +148,8 @@ export const deletePost = async(req, res)=>{
     try {
         const postId = req.params.id
         const author = req.id
-
+        console.log(postId, author);
+        
         const post = await Post.findById(postId)
         if(!post) return res.status(404).json({success:false, message:"Post not found!"})
 
@@ -157,7 +158,7 @@ export const deletePost = async(req, res)=>{
         await Post.findByIdAndDelete(postId);
 
         //remove the post id from user
-        let user = await User.findById(authorId)
+        let user = await User.findById(author)
         user.posts = user.posts.filter(id=>id.toString() !== postId)
         await user.save()
 

@@ -3,7 +3,7 @@ import axios from "axios"
 import { useEffect } from "react"
 import { useDispatch } from "react-redux"
 
-export const useGetAllPost = () =>{
+export const UseGetAllPost = () =>{
     const dispatch = useDispatch()
     useEffect(()=>{
         const fetchAllPost = async()=>{

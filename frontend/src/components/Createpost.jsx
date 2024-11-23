@@ -25,26 +25,29 @@ export default function Createpost({open, setopen}) {
       const formData = new FormData()
       formData.append('caption', caption)
       if(imagePreview) formData.append('image', file)
+        
       try {
         setloading(true)
         const res = await axios.post('http://localhost:8000/api/v1/post/addpost', formData ,{
             headers:{"Content-Type" : 'multipart/form-data'}, withCredentials:true
         })
         if(res.data.success){
+            setopen(false)
             dispatch(setPosts({
               posts: [...posts.posts, res.data.post], 
               ...posts, 
           }));
           toast.success(res.data.message)
-          setopen(false)
         }
+
+       
       } catch (error) {
         toast.error(error.response.data.message)
       }finally{
         setloading(false)
       }
     }
-
+  
     const FileChangeHandler = async(e) =>{
         const file = e.target.files?.[0];
         if(file){
@@ -60,11 +63,11 @@ export default function Createpost({open, setopen}) {
         <DialogHeader className='font-semibold mx-auto'>Create New Post</DialogHeader>
         <div className="flex gap-3 items-center">
             <Avatar>
-                <AvatarImage src={user.profilePicture} alt="img"/>
-                {/* <AvatarFallback>CN</AvatarFallback> */}
+                <AvatarImage src={user?.profilePicture} alt="img"/>
+                <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div>
-                <h1 className="font-semibold text-xs">{user.username}</h1>
+                <h1 className="font-semibold text-xs">{user?.username}</h1>
                 <span className="text-xs text-gray-500">Bio here ...</span>
             </div>
         </div>
@@ -79,7 +82,7 @@ export default function Createpost({open, setopen}) {
         <input type="file" className="hidden" ref={imageRef} onChange={FileChangeHandler} />
         <button onClick={()=>imageRef.current.click()} className="w-fit text-sm mx-auto bg-[#0095F6] hover:bg-[#257eb9] p-3 rounded-lg text-white">Selete from computer</button>
         {
-            imagePreview && ( loading ?<> <div className="flex w-full mx-auto text-center p-3 rounded-lg bg-[#0095F6]"><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Please wait</div></> : <Button type="submit" onClick={createPostHandler} className="w-full">Post</Button>)
+            imagePreview && ( loading ?<> <div className="flex w-full justify-center items-center p-3 rounded-lg bg-[#0095F6] "><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Please wait</div></> : <Button type="submit" onClick={createPostHandler} className="w-full">Post</Button>)
         }
       </DialogContent>
     </Dialog>

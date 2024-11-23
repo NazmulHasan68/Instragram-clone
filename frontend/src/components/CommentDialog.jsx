@@ -40,7 +40,7 @@ export default function CommentDialog({open, setopen, post}) {
                             <Link to={'/profile'}>
                                 <Avatar>
                                     <AvatarImage src={user.profilePicture}/>
-                                    {/* <AvatarFallback>CN</AvatarFallback> */}
+                                    <AvatarFallback>CN</AvatarFallback>
                                 </Avatar>
                             </Link>
                             <div className="flex flex-col">
