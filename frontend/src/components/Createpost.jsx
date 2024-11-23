@@ -31,13 +31,15 @@ export default function Createpost({open, setopen}) {
         const res = await axios.post('http://localhost:8000/api/v1/post/addpost', formData ,{
             headers:{"Content-Type" : 'multipart/form-data'}, withCredentials:true
         })
+        console.log(res.data.success);
+        
         if(res.data.success){
-            setopen(false)
+          setopen(false)
             dispatch(setPosts({
               posts: [...posts.posts, res.data.post], 
               ...posts, 
           }));
-          toast.success(res.data.message)
+          toast.success(res.message)
         }
 
        

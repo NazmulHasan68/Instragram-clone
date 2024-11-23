@@ -34,6 +34,7 @@ export const login = async(req, res)=>{
         if(!user) return res.status(401).json({success: false, message:"user not found!"})
         
         const isPasswordMatch = await bcrypt.compare(password, user.password)
+
         if(!isPasswordMatch) return res.status(401).json({success:false, message:"Incorrect email or password!"})
         
         //populate eatch post if in the posts array
@@ -57,9 +58,10 @@ export const login = async(req, res)=>{
             posts : populatedPost,
             bookmarks : user.bookmarks
         }
-        
+     
         const token = await jwt.sign({userId: user.id}, process.env.JWT_KEY, {expiresIn:'1d'})
         return res.cookie('token', token, {httpOnly:true, sameSite:'strict', maxAge:1*24*60*60*1000}).json({success:true, user, message:`Welcome Back ${user.username}`})
+
 
     } catch (error) {
         res.status(500).json({message:"Login error", error})

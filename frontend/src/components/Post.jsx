@@ -16,6 +16,8 @@ export default function Post({post}) {
     const [open, setopen] = useState(false)
     const {user} = useSelector(state =>state.auth)
     const {posts} = useSelector(state =>state.post)
+    const [postlike , setPostliked] = useState(post?.likes?.length)
+    const [liked , setLiked] = useState(post?.likes?.includes(user?._id)|| false)
     const dispatch = useDispatch()
 
     const changeEventHandler = (e)=>{
@@ -31,14 +33,33 @@ export default function Post({post}) {
       try {
         const res = await axios.delete(`http://localhost:8000/api/v1/post/delete/${post._id}`,{withCredentials:true})
         if(res.data.success){
-          const updatedPostData = posts.filter((postItem)=>postItem?._id !== post._id)
           setopen(false)
+          const updatedPostData = posts.filter((postItem)=>postItem?._id !== post._id)
           dispatch(setPosts(updatedPostData))
           toast.success(res.data.message)
         }  
       } catch (error) {
         console.log(error);
         toast.error(error.response.data.message)
+      }finally{
+        setopen(false)
+      }
+    }
+
+
+    const likeorDisLikeHandker = async()=>{
+      try {
+        const action = liked? 'dislike' : 'like'
+        const res = await axios.post(`http://localhost:8000/api/v1/post/${post._id}/${action}`,{}, {withCredentials:true})
+        if(res.data.success){
+          const updatedlikes = liked? postlike-1 : postlike+1;
+          setPostliked(updatedlikes)
+          toast.success(res.data.message)
+          setLiked(!liked)
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error(error.message)
       }
     }
   
@@ -52,7 +73,7 @@ export default function Post({post}) {
           </Avatar>
           <h1>{post.author?.username}</h1>
         </div>
-        <Dialog>
+        <Dialog >
           <DialogTrigger asChild>
             <MoreHorizontal className=" cursor-pointer" />
           </DialogTrigger>
@@ -67,7 +88,7 @@ export default function Post({post}) {
               Add to favorites
             </Button>
             {
-              user && user?.id === post.author?._id &&  <Button variant="ghost" onClick={deletePostHandler} className="cursor-pointer w-fit">Delete</Button>
+              user && user?.id === post.author?._id &&  <Button variant="ghost" onClick={() => {deletePostHandler(); setopen(false)}} className="cursor-pointer w-fit">Delete</Button>
             }
             
           </DialogContent>
@@ -81,14 +102,14 @@ export default function Post({post}) {
       <div>
         <div className="flex items-center justify-between">
             <div className="flex gap-3 items-center">
-                <FaRegHeart size={22} className=" cursor-pointer"/>
+                <FaRegHeart size={22} className=" cursor-pointer" onClick={likeorDisLikeHandker}/>
                 {/* <FaHeart size={22} /> */}
                 <MessageCircle onClick={()=>setopen(true)} className=" cursor-pointer hover:text-gray-600"/>
                 <Send className=" cursor-pointer hover:text-gray-600"/>
             </div>
             <Bookmark className=" cursor-pointer hover:text-gray-600"/>
         </div>
-        <span className="font-medium block mb-2 text-sm">1k likes </span>
+        <span className="font-medium block mb-2 text-sm">{postlike} k likes </span>
         <p>
             <span className="font-medium mr-2">username </span>
             {post.caption}
