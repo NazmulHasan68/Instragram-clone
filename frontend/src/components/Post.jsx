@@ -10,6 +10,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 import axios from "axios";
 import { setPosts, setSelectedPost } from "@/redux/postSlice";
+import { Badge } from "@/components/ui/badge"
+
 
 export default function Post({ post }) {
   const [text, setText] = useState("");
@@ -120,7 +122,10 @@ export default function Post({ post }) {
             <AvatarImage src={user.profilePicture} alt="post_image" />
             <AvatarFallback>NZ</AvatarFallback>
           </Avatar>
-          <h1>{post.author?.username}</h1>
+          <div className="flex gap-3 items-center">
+            <h1>{post.author?.username}</h1>
+            {user?.id === post.author._id && <Badge variant="secondary" className='text-xs'>Author</Badge>}
+          </div>
         </div>
         <Dialog>
           <DialogTrigger asChild>
@@ -187,19 +192,21 @@ export default function Post({ post }) {
         <span className="font-medium block mb-2 text-sm">
           {post?.likes?.length} likes
         </span>
-        <p>
+        <p className=" line-clamp-2">
           <span className="font-medium mr-2">username </span>
           {post.caption}
         </p>
-        <span
-           onClick={() => {
-            dispatch(setSelectedPost(post));
-            setopen(true);
-          }}
-          className=" cursor-pointer text-sm text-gray-500"
-        >
-          view all {comment?.length} comments
-        </span>
+        {
+          comment.length > 0 && <span
+              onClick={() => {
+              dispatch(setSelectedPost(post));
+              setopen(true);
+            }}
+            className=" cursor-pointer text-sm text-gray-500"
+          >
+            view all {comment?.length} comments
+          </span>
+        }
         <CommentDialog open={open} setopen={setopen} post={post} />
         <div className="flex justify-between items-center">
           <input

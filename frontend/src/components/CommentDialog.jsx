@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "./ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Comment from "./Comment";
 import { setPosts } from "@/redux/postSlice";
@@ -12,8 +12,8 @@ import axios from "axios";
 
 export default function CommentDialog({ open, setopen, post }) {
    const [text, setText] = useState("");
-  const [comment, setcomment] = useState(post.comments);
   const { selectedPost } = useSelector((store) => store.post);
+  const [comment, setcomment] = useState([]);
   const dispatch = useDispatch();
 
   const chanageEventHandler = (e) => {
@@ -38,19 +38,27 @@ export default function CommentDialog({ open, setopen, post }) {
         }
       );
       if (res.data.success) {
+        setText("");
         const updatedCommentData = [...comment, res.data.message];
         setcomment(updatedCommentData);
         const updatedPostData = posts.map((p) =>
-          p._id === post._id ? { ...p, comments: updatedCommentData } : p
+          p._id === selectedPost._id ? { ...p, comments: updatedCommentData } : p
         );
-        dispatch(setPosts(updatedPostData));
-        setText("");
         toast.success(res.data.message);
+        dispatch(setPosts(updatedPostData));
+        
       }
     } catch (error) {
       console.log(error);
     }
   };
+
+
+  useEffect(()=>{
+    if(selectedPost){
+        setcomment(selectedPost.comments)
+    }
+  },[selectedPost])
 
   return (
     <Dialog open={open}>
@@ -106,7 +114,7 @@ export default function CommentDialog({ open, setopen, post }) {
             <hr />
             <div className="flex-1 overflow-y-auto max-h-[70%] h-full p-2 px-4">
               {
-                selectedPost?.comments.map((comment)=><Comment key={comment._id} comment={comment}/>)
+                comment.map((comment)=><Comment key={comment._id} comment={comment}/>)
               }
             </div>
             <div className="p-0">

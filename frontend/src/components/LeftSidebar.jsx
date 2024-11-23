@@ -43,6 +43,9 @@ export default function LeftSidebar() {
   const sidebarHandler =(textType)=>{
     if(textType === 'Logout') logoutHnadler()
     if(textType === 'Create') createPostHandler()
+    if(textType === 'Profile') {
+      navigate(`/profile/${user?.id}`)
+    }
   }
 
   const logoutHnadler = async()=>{

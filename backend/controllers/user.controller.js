@@ -80,7 +80,7 @@ export const logout = async(req, res) =>{
 
 export const getProfile = async(req, res) =>{
     try {
-        const userId = req.params.id
+        const userId = req.params.id 
         let user = await User.findById(userId)
         return res.status(200).json({success:true, user, message:"Get User"})
     } catch (error) {

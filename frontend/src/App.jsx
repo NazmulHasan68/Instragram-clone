@@ -12,7 +12,7 @@ function App() {
         {/* Routes wrapped with MainLayout */}
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} /> 
-          <Route path="/profile" element={<Profile/>} /> 
+          <Route path="/profile/:id" element={<Profile/>} /> 
         </Route>
 
         {/* Auth Routes */}
