@@ -118,14 +118,17 @@ export const addComment = async(req, res) =>{
         if(!post) return res.status(404).json({success:false, message:"Post not found!"})
         
         const comment = await Comment.create({text, author:commentKarneWaUserKiId, post:postId})
-            .populate({path:"author", select:"username, profilePicture"})
+            
+        
+        await comment.populate({path:"author", select:"username profilePicture"})
 
         post.comments.push(comment._id)
-        await post.save()
+        await post.save(post)
 
         return res.status(201).json({success:true, comment, message:"Comment Added"})
         
     } catch (error) {
+        console.log(error);
         return res.status(500).json({success:false, message:"addcommet  error"})
     }
 }

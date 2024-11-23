@@ -26,27 +26,24 @@ export const register = async(req, res)=>{
 
 
 export const login = async(req, res)=>{
-    try {
         const {email, password} = req.body
-        if(!email, !password) return res.status(401).json({success:false, message:"Something is messing, please check"})
-        
+        if(!email, !password) return res.status(401).json({success:false, message:"Something is messing, please check"})  
         let user = await User.findOne({email}) 
         if(!user) return res.status(401).json({success: false, message:"user not found!"})
         
         const isPasswordMatch = await bcrypt.compare(password, user.password)
-
         if(!isPasswordMatch) return res.status(401).json({success:false, message:"Incorrect email or password!"})
         
-        //populate eatch post if in the posts array
+    try {
+       
         const populatedPost = await Promise.all(
-            user.posts.map(async(postId)=>{
-                 const post = await Post.findById(postId)
-                 if(post.author.equals(user._id)){
-                    return post;
-                 }
-                 return null
+            user.posts.map(async (postId) => {
+              if (!postId) return null;
+              const post = await Post.findById(postId);
+              return post && post.author.equals(user._id) ? post : null;
             })
-        )
+          ).then(posts => posts.filter(post => post !== null)); 
+          
         user ={
             id: user._id,
             username : user.username,
@@ -60,6 +57,7 @@ export const login = async(req, res)=>{
         }
      
         const token = await jwt.sign({userId: user.id}, process.env.JWT_KEY, {expiresIn:'1d'})
+        
         return res.cookie('token', token, {httpOnly:true, sameSite:'strict', maxAge:1*24*60*60*1000}).json({success:true, user, message:`Welcome Back ${user.username}`})
 
 
