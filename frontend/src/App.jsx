@@ -12,57 +12,59 @@ import { setSocket } from "./redux/socketSlic";
 import { setOnlineUsers } from "./redux/chatSlice";
 import ChatPage from "./components/ChatPage";
 import { setLikeNotification } from "./redux/RTNSlice";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   const { user } = useSelector((store) => store.auth);
-  const {socket} = useSelector(store => store.auth)
-  const dispatch = useDispatch()
+  const { socket } = useSelector((store) => store.auth);
+  const dispatch = useDispatch();
+
   useEffect(() => {
     if (user) {
-      const soketio = io(`http://localhost:8000`, {
+      const socketio = io(`http://localhost:8000`, {
         query: {
           userId: user?.id,
         },
-        transports : [ 'websocket']
-      })
-      dispatch(setSocket(soketio))
+        transports: ["websocket"],
+      });
 
-      // listen all the events 
-      soketio.on('getOnlineUsers', (onlineUsers)=>{
-        dispatch(setOnlineUsers(onlineUsers))
-      })
+      dispatch(setSocket(socketio));
 
-      //notification
-      soketio.on('notification', (notification)=>{
-        dispatch(setLikeNotification(notification))
-      })
+      // Listen to socket events
+      socketio.on("getOnlineUsers", (onlineUsers) => {
+        dispatch(setOnlineUsers(onlineUsers));
+      });
 
-      return () =>{
-        soketio.close()
-        dispatch(setSocket(null))
-      }
-    }else if(socket){
-      socket.close()
-      dispatch(setSocket(null))
+      socketio.on("notification", (notification) => {
+        dispatch(setLikeNotification(notification));
+      });
+
+      return () => {
+        socketio.close();
+        dispatch(setSocket(null));
+      };
+    } else if (socket) {
+      socket.close();
+      dispatch(setSocket(null));
     }
   }, [user, dispatch]);
+
   return (
     <BrowserRouter>
       <Routes>
-        {/* Routes wrapped with MainLayout */}
-        <Route path="/" element={<MainLayout />}>
+        {/* Protected Routes */}
+        <Route path="/" element={<ProtectedRoute> <MainLayout /></ProtectedRoute> } >
           <Route index element={<Home />} />
-          <Route path="/profile/:id" element={<Profile />} />
-          <Route path="/account/edit" element={<EditProfile />} />
-          <Route path="/chat" element={<ChatPage/>} />
+          <Route path="profile/:id" element={<Profile />} />
+          <Route path="account/edit" element={<EditProfile />} />
+          <Route path="chat" element={<ChatPage />} />
         </Route>
 
-        {/* Auth Routes */}
+        {/* Public Auth Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
 
         {/* Redirect and 404 */}
-        <Route path="/" element={<Navigate to="/login" />} />
         <Route path="*" element={<h1>404: Page Not Found</h1>} />
       </Routes>
     </BrowserRouter>
