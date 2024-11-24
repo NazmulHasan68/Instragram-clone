@@ -17,7 +17,7 @@ export default function RightSidebar() {
         </Link>
         <div>
           <h1 className="font-semibold"><Link to={`/profile/${user.id}`}>{user?.username}</Link></h1>
-          <span className="text-gray-600 text-sm">{user?.bio || 'bio here...'}</span>
+          <span className="text-gray-600 text-sm line-clamp-1">{user?.bio || 'bio here...'}</span>
         </div>
       </div>
       <SuggestedUsers/>

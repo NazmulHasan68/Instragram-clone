@@ -29,7 +29,7 @@ export default function SuggestedUsers() {
                     <h1 className="font-semibold">
                       <Link to={`/profile/${user?._id}`} className="text-sm">{user?.username}</Link>
                     </h1>
-                    <span className="text-gray-600 text-xs line-clamp-1 w-[80%]">
+                    <span className="text-gray-600 text-xs line-clamp-1 w-[100%]">
                       {user?.bio || "bio here..."}
                     </span>
                   </div>

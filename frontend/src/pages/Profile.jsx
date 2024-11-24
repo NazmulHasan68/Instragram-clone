@@ -110,7 +110,7 @@ export default function Profile() {
                 <AtSign />
                 <span className="pl-2">{userProfile?.username}</span>
               </Badge>
-              <span className="text-sm text-gray-700 line-clamp-3">
+              <span className="text-sm text-gray-700 line-clamp-3 w-full sm:w-[350px]">
                 {userProfile?.bio || "bio here ...."}
               </span>
              

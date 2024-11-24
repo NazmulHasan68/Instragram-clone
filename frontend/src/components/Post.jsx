@@ -119,7 +119,7 @@ export default function Post({ post }) {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Avatar>
-            <AvatarImage src={user.profilePicture} alt="post_image" />
+            <AvatarImage src={post?.author?.profilePicture} alt="post_image" />
             <AvatarFallback>NZ</AvatarFallback>
           </Avatar>
           <div className="flex gap-3 items-center">
