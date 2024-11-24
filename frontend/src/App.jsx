@@ -6,17 +6,48 @@ import MainLayout from "./pages/MainLayout";
 import Profile from "./pages/Profile";
 import EditProfile from "./components/EditProfile";
 import ChatPage from "./components/ChatPage";
+import { io } from "socket.io-client";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setSocket } from "./redux/socketSlic";
+import { setOnlineUsers } from "./redux/chatSlice";
 
 function App() {
+  const { user } = useSelector((store) => store.auth);
+  const dispatch = useDispatch()
+  useEffect(() => {
+    if (user) {
+      const soketio = io(`http://localhost:8000`, {
+        query: {
+          userId: user?.id,
+        },
+        transports : [ 'websocket']
+      })
+      dispatch(setSocket(soketio))
+
+      // listen all the events 
+      soketio.on('getOnlineUsers', (onlineUsers)=>{
+        dispatch(setOnlineUsers(onlineUsers))
+      })
+
+      return () =>{
+        soketio.close()
+        dispatch(setSocket(null))
+      }
+    }else{
+      soketio.close()
+      dispatch(setSocket(null))
+    }
+  }, [user, dispatch]);
   return (
     <BrowserRouter>
       <Routes>
         {/* Routes wrapped with MainLayout */}
         <Route path="/" element={<MainLayout />}>
-          <Route index element={<Home />} /> 
-          <Route path="/profile/:id" element={<Profile/>} /> 
-          <Route path="/account/edit" element={<EditProfile/>} /> 
-          <Route path="/chat" element={<ChatPage/>} /> 
+          <Route index element={<Home />} />
+          <Route path="/profile/:id" element={<Profile />} />
+          <Route path="/account/edit" element={<EditProfile />} />
+          <Route path="/chat" element={<ChatPage />} />
         </Route>
 
         {/* Auth Routes */}
