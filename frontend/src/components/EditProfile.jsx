@@ -7,6 +7,8 @@ import { Textarea } from "./ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select"
 import axios from "axios";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { setAuthUser } from "@/redux/authSlice";
 
 export default function EditProfile() {
     const {user} = useSelector(store =>store.auth)
@@ -20,10 +22,15 @@ export default function EditProfile() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const fileChangeHandler = (e) =>{
-        const file = e.target.files?.[0]
-        if(file) setinput({...input, profilePhoto: e.target?.[0]})
-    }
+    const fileChangeHandler = (e) => {
+        const file = e.target.files?.[0]; 
+        if (file) {
+            setinput((prevInput) => ({
+                ...prevInput,
+                profilePhoto: file, 
+            }));
+        }
+    };
 
     const SeletChangeHandler = async (value) =>{
         setinput({...input, gender:value})
@@ -37,13 +44,32 @@ export default function EditProfile() {
         if(input.profilePhoto){
             formData.append('profilePhoto', input.profilePhoto)
         }
-        
-        // try {
-        //     setloading(true)
-        //     const res = await axios.post()
-        // } catch (error) {
-        //    console.log(error); 
-        // }
+        try { 
+            setloading(true)
+            const res = await axios.post(`http://localhost:8000/api/v1/user/profile/edit`, formData,{
+                headers:{
+                    "Content-Type" : "multipart/form-data"
+                },
+                withCredentials:true
+            })
+            if(res.data.success){
+                const updatedUserData = {
+                    ...user, 
+                    bio:res.data.user?.bio,
+                    profilePicture: res.data.user?.profilePicture,
+                    gender: res.data.user.gender
+                }
+                dispatch(setAuthUser(updatedUserData))
+                navigate(`/profile/${user?.id}`)
+                toast.success(res.data.message)
+
+            }
+        } catch (error) {
+           console.log(error); 
+           toast.error(error.res.data.message)
+        }finally{
+            setloading(false)
+        }
     }
   return (
     <div className="flex flex-col gap-4 max-w-2xl mx-auto pl-1 sm:pl-10 p-3">
@@ -62,7 +88,7 @@ export default function EditProfile() {
                     <span className="text-gray-600 text-sm line-clamp-1">{user?.bio || 'bio here...'}</span>
                 </div>
             </div>
-            <input type="file" ref={imageRef} className=" hidden" />
+            <input type="file" ref={imageRef} className=" hidden" onChange={fileChangeHandler}/>
             <Button onClick={()=>imageRef.current.click()} className='bg-[#0095f9] rounded-xl text-slate-50 hover:bg-[#2b7db4]'>Change photo</Button>
         </div>
       </section>
@@ -78,7 +104,7 @@ export default function EditProfile() {
                 </SelectTrigger>
                 <SelectContent className="z-10 text-slate-800 outline-none border-none rounded-xl bg-slate-100">
                     <SelectItem value="male">Male</SelectItem>
-                    <SelectItem value="femal">Femal</SelectItem>
+                    <SelectItem value="female">Femal</SelectItem>
                 </SelectContent>
             </Select>
        </section>

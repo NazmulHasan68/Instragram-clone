@@ -113,12 +113,7 @@ export default function Profile() {
               <span className="text-sm text-gray-700 line-clamp-3">
                 {userProfile?.bio || "bio here ...."}
               </span>
-              <span className="text-sm text-gray-700 line-clamp-1">
-                Learn code with patel marnstack style
-              </span>
-              <span className="text-sm text-gray-700 line-clamp-1">
-                Learn code with patel marnstack style
-              </span>
+             
             </div>
           </div>
         </section>
@@ -146,9 +141,9 @@ export default function Profile() {
           <span className="py-2 cursor-pointer">TAGS</span>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-          {displayedPost?.map((post) => {
+          {displayedPost?.map((post, index) => {
             return (
-              <div key={post?._ic} className=" relative group cursor-pointer">
+              <div key={index} className=" relative group cursor-pointer">
                 <img
                   src={post.image}
                   alt="postImage"
