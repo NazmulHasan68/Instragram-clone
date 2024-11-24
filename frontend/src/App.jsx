@@ -13,6 +13,7 @@ function App() {
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} /> 
           <Route path="/profile/:id" element={<Profile/>} /> 
+          <Route path="/account/edit" element={<Profile/>} /> 
         </Route>
 
         {/* Auth Routes */}

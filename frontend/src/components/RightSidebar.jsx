@@ -9,14 +9,14 @@ export default function RightSidebar() {
   return (
     <div className="w-fit my-5 pr-32">
       <div className="flex items-center gap-2">
-        <Link to={`/profile/${user?.id}`}>
+        <Link to={`/profile/${user.id}`}>
           <Avatar>
             <AvatarImage src={user?.profilePicture} alt="post_image"/> 
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </Link>
         <div>
-          <h1 className="font-semibold"><Link to={`/profile/${user?.id}`}>{user?.username}</Link></h1>
+          <h1 className="font-semibold"><Link to={`/profile/${user.id}`}>{user?.username}</Link></h1>
           <span className="text-gray-600 text-sm">{user?.bio || 'bio here...'}</span>
         </div>
       </div>

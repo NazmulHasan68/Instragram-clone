@@ -46,6 +46,7 @@ export default function LeftSidebar() {
     if(textType === 'Profile') {
       navigate(`/profile/${user?.id}`)
     }
+    if(textType === 'Home') navigate('/')
   }
 
   const logoutHnadler = async()=>{

@@ -81,7 +81,7 @@ export const logout = async(req, res) =>{
 export const getProfile = async(req, res) =>{
     try {
         const userId = req.params.id 
-        let user = await User.findById(userId)
+        let user = await User.findById(userId).populate({path:'posts', createsAt:-1}).populate('bookmarks')
         return res.status(200).json({success:true, user, message:"Get User"})
     } catch (error) {
         res.status(500).json({message:"getProfile error", error})

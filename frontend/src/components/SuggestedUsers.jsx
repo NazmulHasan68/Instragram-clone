@@ -16,7 +16,7 @@ export default function SuggestedUsers() {
           return (
             <div key={index} className="mt-5 flex justify-between items-center">
                 <div className="flex items-center gap-2">
-                  <Link to={`/profile/${user?.id}`}>
+                  <Link to={`/profile/${user?._id}`}>
                     <Avatar>
                       <AvatarImage
                         src={user?.profilePicture}
@@ -27,7 +27,7 @@ export default function SuggestedUsers() {
                   </Link>
                   <div className="flex flex-col gap-0">
                     <h1 className="font-semibold">
-                      <Link to={`/profile/${user?.id}`} className="text-sm">{user?.username}</Link>
+                      <Link to={`/profile/${user?._id}`} className="text-sm">{user?.username}</Link>
                     </h1>
                     <span className="text-gray-600 text-xs line-clamp-1 w-[80%]">
                       {user?.bio || "bio here..."}
