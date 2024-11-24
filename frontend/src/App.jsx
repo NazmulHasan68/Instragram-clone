@@ -4,6 +4,7 @@ import SignUp from "./components/SignUp";
 import Home from "@/pages/Home";
 import MainLayout from "./pages/MainLayout";
 import Profile from "./pages/Profile";
+import EditProfile from "./components/EditProfile";
 
 function App() {
   return (
@@ -13,7 +14,7 @@ function App() {
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} /> 
           <Route path="/profile/:id" element={<Profile/>} /> 
-          <Route path="/account/edit" element={<Profile/>} /> 
+          <Route path="/account/edit" element={<EditProfile/>} /> 
         </Route>
 
         {/* Auth Routes */}

@@ -7,23 +7,22 @@ import { AtSign, Heart, MessageCircle } from "lucide-react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 export default function Profile() {
   const params = useParams();
   const userId = params.id;
   UseGetUserProfile(userId);
-  const { userProfile } = useSelector((store) => store.auth);
+  const { userProfile, user } = useSelector((store) => store.auth);
 
   const [activesTab, setActiveTab] = useState("posts");
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
-  const displayedPost =
-    activesTab === "posts" ? userProfile?.posts : userProfile?.bookmarks;
+  const displayedPost = activesTab === "posts" ? userProfile?.posts : userProfile?.bookmarks;
 
-  const isLoggedinUserProfile = true;
-  const isFollowing = true;
+  const isLoggedinUserProfile = userProfile?._id === user.id
+  const isFollowing = false;
 
   return (
     <div className="flex flex-col gap-4 w-full mx-auto p-6 ">
@@ -44,12 +43,14 @@ export default function Profile() {
               <span>{userProfile?.username}</span>
               {isLoggedinUserProfile ? (
                 <>
-                  <Button
-                    variant="secondary"
-                    className="hover:bg-slate-200 sm:text-md text-xs h-6 sm:h-8"
-                  >
-                    Edit profile
-                  </Button>
+                  <Link to={'/account/edit'}>
+                    <Button
+                      variant="secondary"
+                      className="hover:bg-slate-200 sm:text-md text-xs h-6 sm:h-8"
+                    >
+                      Edit profile
+                    </Button>
+                  </Link>
                   <Button
                     variant="secondary"
                     className="hover:bg-slate-200 sm:text-md text-xs h-6 sm:h-8"
