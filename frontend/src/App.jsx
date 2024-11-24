@@ -5,12 +5,12 @@ import Home from "@/pages/Home";
 import MainLayout from "./pages/MainLayout";
 import Profile from "./pages/Profile";
 import EditProfile from "./components/EditProfile";
-import ChatPage from "./components/ChatPage";
 import { io } from "socket.io-client";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setSocket } from "./redux/socketSlic";
 import { setOnlineUsers } from "./redux/chatSlice";
+import ChatPage from "./components/ChatPage";
 
 function App() {
   const { user } = useSelector((store) => store.auth);
@@ -48,7 +48,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="/profile/:id" element={<Profile />} />
           <Route path="/account/edit" element={<EditProfile />} />
-          <Route path="/chat" element={<ChatPage />} />
+          <Route path="/chat" element={<ChatPage/>} />
         </Route>
 
         {/* Auth Routes */}
