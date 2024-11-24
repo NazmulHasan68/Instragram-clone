@@ -14,6 +14,7 @@ import { setOnlineUsers } from "./redux/chatSlice";
 
 function App() {
   const { user } = useSelector((store) => store.auth);
+  const {socket} = useSelector(store => store.auth)
   const dispatch = useDispatch()
   useEffect(() => {
     if (user) {
@@ -34,8 +35,8 @@ function App() {
         soketio.close()
         dispatch(setSocket(null))
       }
-    }else{
-      soketio.close()
+    }else if(socket){
+      socket.close()
       dispatch(setSocket(null))
     }
   }, [user, dispatch]);

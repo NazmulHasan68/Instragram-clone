@@ -9,17 +9,17 @@ import Messages from "./Messages"
 export default function ChatPage() {
     const dispatch = useDispatch()
     const {user, suggestedUsers, selectedUser} = useSelector(store=>store.auth)
-    const isOnline = false
-    console.log();
-
+    const {onlineUsers} = useSelector(store=>store.chat)
+ 
   return (
     <div className="flex h-screen">
-      <section className="w-full sm:w-[25%] p-3 border-r border-r-gray-300">
+      <section className="w-[20%] sm:w-[25%] p-3 border-r border-r-gray-300">
         <h1 className="font-bold mb-4 px-3  text-xl ">{user?.username}</h1>
         <hr className="mb-4 border-gray-300"/>
         <div className=" overflow-y-auto h-[80vh]">
             {
                 suggestedUsers.map((suggestedUser, index)=>{
+                    const isOnline = Array.isArray(onlineUsers) && onlineUsers.includes(suggestedUser?._id);
                     return (
                         <div key={index} onClick={()=>dispatch(setselectedUser(suggestedUser))} className="flex gap-3 items-center p-2 hover:bg-gray-50 cursor-pointer">
                             <Avatar>
@@ -38,6 +38,7 @@ export default function ChatPage() {
       </section>
       {
         selectedUser ? (
+            
             <section className="flex-1 flex flex-col w-full ">
                 <div className="flex gap-3 items-center px-3 py-2 border-b border-b-gray-300 sticky top-0 bg-white z-10">
                     <Avatar>
@@ -46,7 +47,7 @@ export default function ChatPage() {
                     </Avatar>
                     <div className="flex flex-col">
                         <span className="font-medium ">{selectedUser?.username}</span>
-                        <span className={`text-xs font-semibold ${isOnline ? "text-green-600" : "text-red-600"}`}>{isOnline ? "Online" : "Offline"}</span>
+                        {/* <span className={`text-xs font-semibold ${isOnline ? "text-green-600" : "text-red-600"}`}>{isOnline ? "Online" : "Offline"}</span> */}
                     </div>
                 </div>
                
