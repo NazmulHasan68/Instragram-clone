@@ -47,6 +47,7 @@ export default function LeftSidebar() {
       navigate(`/profile/${user?.id}`)
     }
     if(textType === 'Home') navigate('/')
+    if(textType === 'Messages') navigate('/chat')
   }
 
   const logoutHnadler = async()=>{
