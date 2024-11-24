@@ -131,7 +131,7 @@ export default function Post({ post }) {
           <DialogTrigger asChild>
             <MoreHorizontal className=" cursor-pointer" />
           </DialogTrigger>
-          <DialogContent className="flex flex-col items-center text-sm text-center">
+          <DialogContent className="flex flex-col items-center text-sm text-center bg-white">
             <Button
               variant="ghost"
               className="cursor-pointer w-fit text-[#ED4956] font-bold"

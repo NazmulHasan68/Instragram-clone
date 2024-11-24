@@ -3,7 +3,7 @@ import cloudinary from '../util/cloudinary.js'
 import { Post } from '../models/post.mode.js'
 import { User } from '../models/user.model.js'
 import { Comment } from '../models/comment.mode.js'
-import { getReceiverSocketId } from '../socket/socket.js'
+import { getReceiverSocketId, io } from '../socket/socket.js'
 
 
 

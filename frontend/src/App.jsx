@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setSocket } from "./redux/socketSlic";
 import { setOnlineUsers } from "./redux/chatSlice";
 import ChatPage from "./components/ChatPage";
+import { setLikeNotification } from "./redux/RTNSlice";
 
 function App() {
   const { user } = useSelector((store) => store.auth);
@@ -29,6 +30,11 @@ function App() {
       // listen all the events 
       soketio.on('getOnlineUsers', (onlineUsers)=>{
         dispatch(setOnlineUsers(onlineUsers))
+      })
+
+      //notification
+      soketio.on('notification', (notification)=>{
+        dispatch(setLikeNotification(notification))
       })
 
       return () =>{

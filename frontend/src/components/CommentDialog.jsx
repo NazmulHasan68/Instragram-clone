@@ -64,7 +64,7 @@ export default function CommentDialog({ open, setopen, post }) {
     <Dialog open={open}>
       <DialogContent
         onInteractOutside={() => setopen(false)}
-        className="max-w-5xl p-0"
+        className="max-w-5xl p-0 bg-white"
       >
         <div className="flex justify-between">
           <div className="basis-1/2">
@@ -97,11 +97,11 @@ export default function CommentDialog({ open, setopen, post }) {
                   </span>
                 </div>
               </div>
-              <Dialog>
-                <DialogTrigger asChild>
+              <Dialog className='bg-white'>
+                <DialogTrigger asChild >
                   <MoreHorizontal className=" cursor-pointer" />
-                </DialogTrigger>
-                <DialogContent className="flex flex-col  items-center text-sm text-center">
+                </DialogTrigger >
+                <DialogContent className="flex flex-col  items-center text-sm text-center bg-white">
                   <div className=" cursor-pointer w-full text-[#ED4956] font-bold">
                     Unfollow
                   </div>
@@ -124,7 +124,7 @@ export default function CommentDialog({ open, setopen, post }) {
                   value={text}
                   onChange={chanageEventHandler}
                   placeholder="Add a comment ..."
-                  className="w-full outline-none border border-gray-300 p-2 rounded"
+                  className="w-full outline-none border border-gray-400 bg-slate-100 p-2 rounded"
                 />
                 <Button
                   disabled={!text.trim()}
